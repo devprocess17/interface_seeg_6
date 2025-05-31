@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCH SEEG - L'Expérience Digitale du Collaborateur</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <style>
+        :root {
+            --seeg-blue: #0053A1;
+            --seeg-blue-light: #2186D9;
+            --seeg-blue-dark: #003B73;
+            --highlight: #FFB347;
+            --text-dark: #333;
+            --text-light: #666;
+            --white: #ffffff;
+            --gray-light: #f8f9fa;
+            --gray-medium: #e9ecef;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-dark);
+            scroll-behavior: smooth;
+            background-color: var(--white);
+        }
+        
+        .bg-seeg-blue {
+            background-color: var(--seeg-blue);
+        }
+        
+        .bg-seeg-light {
+            background-color: var(--seeg-blue-light);
+        }
+        
+        .text-seeg-blue {
+            color: var(--seeg-blue);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--seeg-blue), var(--seeg-blue-dark));
+            height: 70vh;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30%;
+            background: linear-gradient(to top, var(--white), transparent);
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 10;
+        }
+        
+        .wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 150px;
+            background-image: url('data:image/svg+xml;charset=utf8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"%3E%3Cpath fill="%23ffffff" fill-opacity="1" d="M0,160L48,144C96,128,192,96,288,106.7C384,117,480,171,576,186.7C672,203,768,181,864,154.7C960,128,1056,96,1152,90.7C1248,85,1344,107,1392,117.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"%3E%3C/path%3E%3C/svg%3E');
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+        
+        .section-title {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 2rem;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -10px;
+            width: 60px;
+            height: 4px;
+            background-color: var(--highlight);
+        }
+        
+        .timeline-navigation {
+            position: sticky;
+            top: 0;
+            background-color: var(--white);
+            padding: 1rem 0;
+            z-index: 100;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        
+        .timeline-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--white);
+            border: 3px solid var(--seeg-blue);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .timeline-dot.active {
+            background-color: var(--seeg-blue);
+            transform: scale(1.2);
+        }
+        
+        .timeline-dot:hover {
+            transform: scale(1.2);
+            cursor: pointer;
+        }
+        
+        .timeline-line {
+            height: 3px;
+            background: linear-gradient(to right, var(--seeg-blue), var(--seeg-blue-light));
+            flex-grow: 1;
+        }
+        
+        .phase-card {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            background-color: var(--white);
+            border-top: 4px solid var(--seeg-blue);
+        }
+        
+        .phase-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        
+        .phase-icon {
+            font-size: 2.5rem;
+            color: var(--seeg-blue);
+            margin-bottom: 1.5rem;
+            transform-origin: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .phase-card:hover .phase-icon {
+            transform: scale(1.1);
+        }
+        
+        .module-chip {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background-color: var(--seeg-blue-light);
+            color: var(--white);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .module-chip:hover {
+            background-color: var(--seeg-blue);
+            transform: scale(1.05);
+        }
+        
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .benefit-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--gray-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: var(--seeg-blue);
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .feature-item {
+            background-color: var(--gray-light);
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-item:hover {
+            background-color: var(--seeg-blue-light);
+            color: var(--white);
+        }
+        
+        .feature-item:hover i {
+            color: var(--white);
+        }
+        
+        .feature-item i {
+            color: var(--seeg-blue);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .appear-animation {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        
+        .appear-animation.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .stage-wrapper {
+            margin-top: 5rem;
+            padding-top: 2rem;
+        }
+        
+        .btn-seeg {
+            background-color: var(--seeg-blue);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .btn-seeg:hover {
+            background-color: var(--seeg-blue-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .btn-seeg i {
+            margin-left: 0.5rem;
+        }
+        
+        .module-diagram {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 3rem auto;
+            height: 300px;
+        }
+        
+        .module-item {
+            position: absolute;
+            padding: 1rem;
+            background-color: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--seeg-blue);
+            max-width: 200px;
+        }
+        
+        .module-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .module-item.referentiel {
+            top: 0;
+            left: 10%;
+        }
+        
+        .module-item.indicateurs {
+            top: 0;
+            right: 10%;
+        }
+        
+        .module-item.acces {
+            bottom: 0;
+            left: 10%;
+        }
+        
+        .module-item.alertes {
+            bottom: 0;
+            right: 10%;
+        }
+        
+        .module-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            background-color: var(--seeg-blue);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            box-shadow: 0 0 0 10px rgba(0, 83, 161, 0.1);
+        }
+        
+        .connector {
+            position: absolute;
+            background-color: rgba(0, 83, 161, 0.2);
+            z-index: -1;
+        }
+        
+        .connector.top-left {
+            width: 3px;
+            height: 100px;
+            top: 60px;
+            left: calc(10% + 100px);
+            transform: rotate(30deg);
+        }
+        
+        .connector.top-right {
+            width: 3px;
+            height: 100px;
+            top: 60px;
+            right: calc(10% + 100px);
+            transform: rotate(-30deg);
+        }
+        
+        .connector.bottom-left {
+            width: 3px;
+            height: 100px;
+            bottom: 60px;
+            left: calc(10% + 100px);
+            transform: rotate(-30deg);
+        }
+        
+        .connector.bottom-right {
+            width: 3px;
+            height: 100px;
+            bottom: 60px;
+            right: calc(10% + 100px);
+            transform: rotate(30deg);
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0% { transform: translate(-50%, -50%) translateY(0px); }
+            50% { transform: translate(-50%, -50%) translateY(-10px); }
+            100% { transform: translate(-50%, -50%) translateY(0px); }
+        }
+        
+        .benefits-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        
+        .benefit-card {
+            background-color: var(--white);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .benefit-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .benefit-card h4 {
+            color: var(--seeg-blue);
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        .benefit-card-icon {
+            font-size: 2rem;
+            color: var(--seeg-blue);
+            margin-bottom: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .benefits-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .module-diagram {
+                height: 600px;
+            }
+            
+            .module-item {
+                position: relative;
+                margin-bottom: 1rem;
+                max-width: 100%;
+            }
+            
+            .module-item.referentiel,
+            .module-item.indicateurs,
+            .module-item.acces,
+            .module-item.alertes {
+                top: auto;
+                right: auto;
+                bottom: auto;
+                left: auto;
+            }
+            
+            .connector {
+                display: none;
+            }
+            
+            .module-center {
+                position: relative;
+                transform: none;
+                margin: 2rem auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header flex items-center justify-center text-white">
+        <div class="header-content container mx-auto px-4 text-center" data-aos="fade-up">
+            <div class="mb-8">
+                <h1 class="text-4xl md:text-6xl font-bold mb-4">MCH SEEG</h1>
+                <p class="text-xl md:text-2xl opacity-90">L'Expérience Digitale du Collaborateur</p>
+            </div>
+            <div class="mt-12">
+                <p class="text-lg md:text-xl mb-6 max-w-2xl mx-auto">
+                    Transformez votre Capital Humain avec une solution digitale complète
+                </p>
+                <button class="btn-seeg pulse">
+                    Découvrir le parcours collaborateur 
+                    <i class="fas fa-chevron-down ml-2"></i>
+                </button>
+            </div>
+        </div>
+        <div class="wave"></div>
+    </header>
+
+    <section class="container mx-auto px-4 py-16 text-center">
+        <h2 class="text-3xl font-bold mb-6 text-seeg-blue" data-aos="fade-up">La Transformation RH en Action</h2>
+        <p class="max-w-3xl mx-auto text-lg text-text-light mb-12" data-aos="fade-up" data-aos-delay="100">
+            Le logiciel MCH accompagne chaque étape du cycle de vie de vos collaborateurs, 
+            de leur recrutement à leur départ, en optimisant l'expérience employé.
+        </p>
+        
+        <div class="timeline-navigation mb-16" id="timeline-nav" data-aos="fade-up" data-aos-delay="200">
+            <div class="flex items-center justify-between max-w-4xl mx-auto">
+                <div class="timeline-dot active" data-target="phase1">
+                    <span class="absolute top-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap font-semibold text-sm">Sourcing & Acquisition</span>
+                </div>
+                <div class="timeline-line"></div>
+                <div class="timeline-dot" data-target="phase2">
+                    <span class="absolute top-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap font-semibold text-sm">Intégration</span>
+                </div>
+                <div class="timeline-line"></div>
+                <div class="timeline-dot" data-target="phase3">
+                    <span class="absolute top-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap font-semibold text-sm">Engagement & Performance</span>
+                </div>
+                <div class="timeline-line"></div>
+                <div class="timeline-dot" data-target="phase4">
+                    <span class="absolute top-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap font-semibold text-sm">Évolution de Carrière</span>
+                </div>
+                <div class="timeline-line"></div>
+                <div class="timeline-dot" data-target="phase5">
+                    <span class="absolute top-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap font-semibold text-sm">Transition & Départ</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Phase 1: Sourcing & Acquisition -->
+    <section id="phase1" class="stage-wrapper bg-gray-light py-16">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center mb-12">
+                <div class="md:w-1/2 mb-8 md:mb-0" data-aos="fade-right">
+                    <span class="bg-seeg-blue text-white py-1 px-3 rounded-full text-sm font-semibold mb-4 inline-block">PHASE 1</span>
+                    <h2 class="text-3xl font-bold mb-4 text-seeg-blue">Sourcing & Acquisition des Talents</h2>
+                    <p class="text-lg mb-6">Attirez et recrutez les meilleurs profils pour la SEEG grâce à un processus digitalisé et efficace.</p>
+                    
+                    <div class="mb-6">
+                        <h4 class="font-semibold mb-3 text-seeg-blue">Modules MCH impliqués :</h4>
+                        <div>
+                            <span class="module-chip">Recrutement & Intégration</span>
+                            <span class="module-chip">Référentiel RH</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="md:w-1/2 pl-0 md:pl-12" data-aos="fade-left">
+                    <div class="phase-card p-8 bg-white">
+                        <i class="fas fa-bullseye phase-icon"></i>
+                        <h3 class="text-xl font-semibold mb-4">Fonctionnalités clés</h3>
+                        
+                        <div class="feature-grid">
+                            <div class="feature-item">
+                                <i class="fas fa-search"></i>
+                                <h5 class="font-semibold mb-2">Définition du besoin</h5>
+                                <p class="text-sm">Création digitale des fiches de poste à partir du référentiel de compétences.</p>
+                            </div>
+                            
+                            <div class="feature-item">
+                                <i class="fas fa-file-alt"></i>
+                                <h5 class="font-semibold mb-2">Gestion des candidatures</h5>
+                                <p class="text-sm">Centralisation et traitement intelligent des CV avec notifications automatiques.</p>
+                            </div>
+                            
+                            <div class="feature-item">
+                                <i class="fas fa-users"></i>
+                                <h5 class="font-semibold mb-2">Entretiens collaboratifs</h5>
+                                <p class="text-sm">Planification et évaluation standardisée avec grilles partagées.</p>
+                            </div>
+                            
+                            <div class="feature-item">
+                                <i class="fas fa-handshake"></i>
+                                <h5 class="font-semibold mb-2">Pré-intégration</h5>
+                                <p class="text-sm">Création automatique du dossier et communication avant l'arrivée.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8 benefit-item">
+                            <div class="benefit-icon">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold">Résultat clé</h5>
+                                <p class="text-sm">Réduction de 40% du temps de traitement des candidatures</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Phase 2: Intégration & Socialisation -->
+    <section id="phase2" class="stage-wrapper py-16">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row-reverse items-center mb-12">
+                <div class="md:w-1/2 mb-8 md:mb-0" data-aos="fade-left">
+                    <span class="bg-seeg-blue text-white py-1 px-3 rounded-full text-sm font-semibold mb-4 inline-block">PHASE 2</span>
+                    <h2 class="text-3xl font-bold mb-4 text-seeg-blue">Intégration & Socialisation</h2>
+                    <p class="text-lg mb-6">Accueillez et intégrez vos nouveaux collaborateurs avec un parcours structuré et personnalisé.</p>
+                    
+                    <div class="mb-6">
+                        <h4 class="font-semibold mb-3 text-seeg-blue">Modules MCH impliqués :</h4>
+                        <div>
+                            <span class="module-chip">Recrutement & Intégration</span>
+                            <span class="module-chip">Gestion Administrative</span>
+                            <span class="module-chip">Formation</span>
+                            <span class="module-chip">Profil Carrière</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="md:w-1/2 pr-0 md:pr-12" data-aos="fade-right">
+                    <div class="phase-card p-8 bg-white">
+                        <i class="fas fa-user-plus phase-icon"></i>
+                        <h3 class="text-xl font-semibold mb-4">Fonctionnalités clés</h3>
+                        
+                        <div class="feature-grid">
+                            <div class="feature-item">
+                                <i class="fas fa-id-card-alt"></i>
+                                <h5 class="font-semibold mb-2">Accueil Jour J</h5>
+                                <p class="text-sm">Programme personnalisé avec notifications automatiques aux équipes concernées.</p>
+                            </div>
+                            
+                            <div class="feature-item">
+                                <i class="fas fa-file-signature"></i>
+                                <h5 class="font-semibold mb-2">Formalités digitales</h5>
+                                <p class="text-sm">Signature électronique et création instantanée du profil RH complet.</p>
+                            </div>
+                            
+                            <div class="feature-item">
+                                <i class="fas fa-tasks"></i>
+                                <h5 class="font-semibold mb-2">Plan d'intégration</h5>
+                                <p class="text-sm">Checklist interactive et suivi des rencontres clés pour le nouvel arrivant.</p>
+                            </div>
+                            
+                            <div class="feature-item">
+                                <i class="fas fa-graduation-cap"></i>
+                                <h5 class="font-semibold mb-2">Formations initiales</h5>
+                                <p class="text-sm">Programme automatisé de formations obligatoires avec suivi de progression.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8 benefit-item">
+                            <div class="benefit-icon">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold">Résultat clé</h5>
+                                <p class="text-sm">Autonomie opérationnelle 30% plus rapide pour les nouveaux collaborateurs</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Phase 3: Engagement & Performance Continue -->
+    <section id="phase3" class="stage-wrapper bg-gray-light py-16">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center mb-12">
+                <div class="md:w-1/2 mb-8 md:mb-0" data-aos="fade-right">
+                    <span class="bg-seeg-blue text-white py-1 px-3 rounded-full text-sm font-semibold mb-4 inline-block">PHASE 3</span>
+                    <h2 class="text-3xl font-bold mb-4 text-seeg-blue">Engagement & Performance Continue</h2>
+                    <p class="text-lg mb-6">Accompagnez le développement professionnel et l'engagement de vos collaborateurs au quotidien.</p>
+                    
+                    <div class="mb-6">
+                        <h4 class="font-semibold mb-3 text-seeg-blue">Modules MCH impliqués :</h4>
+                        <div>
+                            <span class="module-chip">Gestion Administrative</span>
+                            <span class="module-chip">Profil Carrière</span>
+                            <span class="module-chip">Formation</span>
+                            <span class="module-chip">Évaluations</span>
+                            <span class="module-chip">GPEC</span>
+                            <span class="module-chip">Indicateurs RH</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="md:w-1/2 pl-0 md:pl-12" data-aos="fade-left">
+                    <div class="phase-card p-8 bg-white">
+                        <i class="fas fa-chart-line phase-icon"></i>
+                        <h3 class="text-xl font-semibold mb-4">Fonctionnalités clés</h3>
+                        
+                        <div class="feature-grid">
+                            <div class="feature-item">
+                                <i class="fas fa-clipboard-check"></i>
+                                <h5 class="font-semibold mb-2">Self-service RH</h5>
+                                <p class="text-sm">Gestion autonome des demandes d'absences, congés avec workflows automatisés.</p>
+                            </div>
+                            
+                            <div class="feature-item">
+                                <i class="fas fa-comments"></i>
+                                <h5 class="font-semibold mb-2">Entretiens & Feedback</h5>
+                                <p class="text-sm">Préparation guidée et suivi des entretiens périodiques avec historique.</p>
+                            </div>
+                            
+                            <div class="feature-item">
+                                <i class="fas fa-brain"></i>
+                                <h5 class="font-semibold mb-2">Développement des compétences</h5>
+                                <p class="text-sm">Catalogue de formations et suivi personnalisé des acquisitions.</p>
+                            </div>
+                            
+                            <div class="feature-item">
+                                <i class="fas fa-medal"></i>
+                                <h5 class="font-semibold mb-2">Rémunération & Avantages</h5>
+                                <p class="text-sm">Campagnes de révision salariale digitalisées avec simulation d'impact.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8 benefit-item">
+                            <div class="benefit-icon">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold">Résultat clé</h5>
+                                <p class="text-sm">Réduction de 60% du temps consacré aux tâches administratives RH</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Phase 4: Évolution de Carrière & Mobilité -->
+    <section id="phase4" class="stage-wrapper py-16">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row-reverse items-center mb-12">
+                <div class="md:w-1/2 mb-8 md:mb-0" data-aos="fade-left">
+                    <span class="bg-seeg-blue text-white py-1 px-3 rounded-full text-sm font-semibold mb-4 inline-block">PHASE 4</span>
+                    <h2 class="text-3xl font-bold mb-4 text-seeg-blue">Évolution de Carrière & Mobilité</h2>
+                    <p class="text-lg mb-6">Favorisez le développement des talents et la mobilité interne avec une gestion prévisionnelle efficace.</p>
+                    
+                    <div class="mb-6">
+                        <h4 class="font-semibold mb-3 text-seeg-blue">Modules MCH impliqués :</h4>
+                        <div>
+                            <span class="module-chip">Carrières & Talents</span>
+                            <span class="module-chip">GPEC</span>
+                            <span class="module-chip">Formation</span>
+                            <span class="module-chip">Évaluations</span>
+                            <span class="module-chip">Référentiel RH</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="md:w-1/2 pr-0 md:pr-12" data-aos="fade-right">
+                    <div class="phase-card p-8 bg-white">
+                        <i class="fas fa-arrow-up phase-icon"></i>
+                        <h3 class="text-xl font-semibold mb-4">Fonctionnalités clés</h3>
+                        
+                        <div class="feature-grid">
+                            <div class="feature-item">
+                                <i class="fas fa-star"></i>
+                                <h5 class="font-semibold mb-2">Identification des talents</h5>
+                                <p class="text-sm">Matrice potentiel/performance et people reviews digitalisées.</p>
+                            </div>
+                            
+                            <div class="feature-item">
+                                <i class="fas fa-route"></i>
+                                <h5 class="font-semibold mb-2">Mobilité interne</h5>
+                                <p class="text-sm">Bourse à l'emploi interne avec matching intelligent des profils.</p>
+                            </div>
+                            
+                            <div class="feature-item">
+                                <i class="fas fa-lightbulb"></i>
+                                <h5 class="font-semibold mb-2">Plans de développement</h5>
+                                <p class="text-sm">Parcours personnalisés avec objectifs, formations et expériences spécifiques.</p>
+                            </div>
+                            
+                            <div class="feature-item">
+                                <i class="fas fa-chess-knight"></i>
+                                <h5 class="font-semibold mb-2">Plans de succession</h5>
+                                <p class="text-sm">Cartographie des postes clés et préparation des successeurs potentiels.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8 benefit-item">
+                            <div class="benefit-icon">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold">Résultat clé</h5>
+                                <p class="text-sm">Augmentation de 25% du taux de mobilité interne</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Phase 5: Transition & Départ -->
+    <section id="phase5" class="stage-wrapper bg-gray-light py-16">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center mb-12">
+                <div class="md:w-1/2 mb-8 md:mb-0" data-aos="fade-right">
+                    <span class="bg-seeg-blue text-white py-1 px-3 rounded-full text-sm font-semibold mb-4 inline-block">PHASE 5</span>
+                    <h2 class="text-3xl font-bold mb-4 text-seeg-blue">Transition & Départ</h2>
+                    <p class="text-lg mb-6">Gérez les départs de manière professionnelle avec un processus structuré et respectueux.</p>
+                    
+                    <div class="mb-6">
+                        <h4 class="font-semibold mb-3 text-seeg-blue">Modules MCH impliqués :</h4>
+                        <div>
+                            <span class="module-chip">Gestion Administrative</span>
+                            <span class="module-chip">Profil Carrière</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="md:w-1/2 pl-0 md:pl-12" data-aos="fade-left">
+                    <div class="phase-card p-8 bg-white">
+                        <i class="fas fa-door-open phase-icon"></i>
+                        <h3 class="text-xl font-semibold mb-4">Fonctionnalités clés</h3>
+                        
+                        <div class="feature-grid">
+                            <div class="feature-item">
+                                <i class="fas fa-clipboard-list"></i>
+                                <h5 class="font-semibold mb-2">Workflow de départ</h5>
+                                <p class="text-sm">Process automatisé avec checklist et notifications aux parties prenantes.</p>
+                            </div>
+                            
+                            <div class="feature-item">
+                                <i class="fas fa-comments-dollar"></i>
+                                <h5 class="font-semibold mb-2">Entretien de sortie</h5>
+                                <p class="text-sm">Questionnaire digital et analyse des motifs de départ pour amélioration continue.</p>
+                            </div>
+                            
+                            <div class="feature-item">
+                                <i class="fas fa-exchange-alt"></i>
+                                <h5 class="font-semibold mb-2">Transfert de connaissances</h5>
+                                <p class="text-sm">Plan structuré avec suivi d'avancement et validation des étapes critiques.</p>
+                            </div>
+                            
+                            <div class="feature-item">
+                                <i class="fas fa-file-invoice-dollar"></i>
+                                <h5 class="font-semibold mb-2">Documents de fin de contrat</h5>
+                                <p class="text-sm">Production et traçabilité automatisées des documents légaux.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8 benefit-item">
+                            <div class="benefit-icon">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold">Résultat clé</h5>
+                                <p class="text-sm">Sécurisation à 100% des procédures de départ</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modules Transversaux -->
+    <section class="py-16">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold mb-8 text-seeg-blue" data-aos="fade-up">Modules Transversaux MCH</h2>
+            <p class="text-lg mb-12 max-w-3xl mx-auto" data-aos="fade-up" data-aos-delay="100">
+                Ces modules fondamentaux sont actifs à travers toutes les phases du parcours collaborateur, 
+                assurant cohérence et continuité de l'expérience RH.
+            </p>
+            
+            <div class="module-diagram" data-aos="fade-up" data-aos-delay="200">
+                <div class="connector top-left"></div>
+                <div class="connector top-right"></div>
+                <div class="connector bottom-left"></div>
+                <div class="connector bottom-right"></div>
+                
+                <div class="module-center floating">
+                    <span>MCH<br>SEEG</span>
+                </div>
+                
+                <div class="module-item referentiel" data-aos="fade-right" data-aos-delay="300">
+                    <i class="fas fa-database text-seeg-blue text-xl mb-2"></i>
+                    <h4 class="font-semibold text-seeg-blue">Référentiel RH</h4>
+                    <p class="text-sm">Socle d'informations structurées garantissant la cohérence des données</p>
+                </div>
+                
+                <div class="module-item indicateurs" data-aos="fade-left" data-aos-delay="400">
+                    <i class="fas fa-chart-pie text-seeg-blue text-xl mb-2"></i>
+                    <h4 class="font-semibold text-seeg-blue">Indicateurs RH</h4>
+                    <p class="text-sm">Tableaux de bord dynamiques pour piloter la performance RH</p>
+                </div>
+                
+                <div class="module-item acces" data-aos="fade-right" data-aos-delay="500">
+                    <i class="fas fa-shield-alt text-seeg-blue text-xl mb-2"></i>
+                    <h4 class="font-semibold text-seeg-blue">Gestion des Accès</h4>
+                    <p class="text-sm">Paramétrage fin des droits selon les rôles et responsabilités</p>
+                </div>
+                
+                <div class="module-item alertes" data-aos="fade-left" data-aos-delay="600">
+                    <i class="fas fa-bell text-seeg-blue text-xl mb-2"></i>
+                    <h4 class="font-semibold text-seeg-blue">Alertes & Notifications</h4>
+                    <p class="text-sm">Système intelligent d'alertes personnalisées pour les événements clés</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bénéfices -->
+    <section class="bg-seeg-blue text-white py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-8 text-center" data-aos="fade-up">Les Bénéfices Clés de MCH</h2>
+            
+            <div class="benefits-container" data-aos="fade-up" data-aos-delay="200">
+                <div class="benefit-card text-center text-text-dark">
+                    <i class="fas fa-user-tie benefit-card-icon"></i>
+                    <h4>Pour les Collaborateurs</h4>
+                    <ul class="text-left text-sm">
+                        <li class="mb-2"><i class="fas fa-check text-seeg-blue mr-2"></i> Autonomie accrue (self-service RH)</li>
+                        <li class="mb-2"><i class="fas fa-check text-seeg-blue mr-2"></i> Visibilité sur le parcours professionnel</li>
+                        <li class="mb-2"><i class="fas fa-check text-seeg-blue mr-2"></i> Accès facilité aux opportunités</li>
+                        <li class="mb-2"><i class="fas fa-check text-seeg-blue mr-2"></i> Processus simplifiés</li>
+                        <li><i class="fas fa-check text-seeg-blue mr-2"></i> Développement personnalisé</li>
+                    </ul>
+                </div>
+                
+                <div class="benefit-card text-center text-text-dark">
+                    <i class="fas fa-users-cog benefit-card-icon"></i>
+                    <h4>Pour les Managers</h4>
+                    <ul class="text-left text-sm">
+                        <li class="mb-2"><i class="fas fa-check text-seeg-blue mr-2"></i> Outils d'aide à la décision</li>
+                        <li class="mb-2"><i class="fas fa-check text-seeg-blue mr-2"></i> Suivi simplifié des équipes</li>
+                        <li class="mb-2"><i class="fas fa-check text-seeg-blue mr-2"></i> Tâches administratives allégées</li>
+                        <li class="mb-2"><i class="fas fa-check text-seeg-blue mr-2"></i> Meilleure gestion des talents</li>
+                        <li><i class="fas fa-check text-seeg-blue mr-2"></i> Visibilité sur les compétences</li>
+                    </ul>
+                </div>
+                
+                <div class="benefit-card text-center text-text-dark">
+                    <i class="fas fa-building benefit-card-icon"></i>
+                    <h4>Pour la Fonction RH</h4>
+                    <ul class="text-left text-sm">
+                        <li class="mb-2"><i class="fas fa-check text-seeg-blue mr-2"></i> Centralisation des données RH</li>
+                        <li class="mb-2"><i class="fas fa-check text-seeg-blue mr-2"></i> Fiabilisation des processus</li>
+                        <li class="mb-2"><i class="fas fa-check text-seeg-blue mr-2"></i> Pilotage stratégique facilité</li>
+                        <li class="mb-2"><i class="fas fa-check text-seeg-blue mr-2"></i> Réduction des tâches à faible valeur</li>
+                        <li><i class="fas fa-check text-seeg-blue mr-2"></i> Conformité réglementaire</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-16 text-center">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-6 text-seeg-blue" data-aos="fade-up">Prêt à Transformer votre Capital Humain ?</h2>
+            <p class="text-lg mb-8 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="100">
+                Le MCH accompagne la transformation RH de la SEEG, positionnant la fonction Capital Humain 
+                comme un véritable partenaire stratégique de l'entreprise.
+            </p>
+            <div data-aos="fade-up" data-aos-delay="200">
+                <button class="btn-seeg">
+                    Découvrir la solution complète
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+            <p class="mt-8 text-sm text-text-light" data-aos="fade-up" data-aos-delay="300">
+                Solution proposée par CNX 4.0 en collaboration avec la Direction du Capital Humain de la SEEG
+            </p>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init({
+                duration: 800,
+                easing: 'ease-in-out',
+                once: true
+            });
+            
+            // Smooth scroll function
+            document.querySelectorAll('.timeline-dot').forEach(dot => {
+                dot.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    const targetElement = document.getElementById(targetId);
+                    
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Update active dot
+                        document.querySelectorAll('.timeline-dot').forEach(d => {
+                            d.classList.remove('active');
+                        });
+                        this.classList.add('active');
+                    }
+                });
+            });
+            
+            // Scroll to discover button
+            document.querySelector('.pulse').addEventListener('click', function() {
+                window.scrollTo({
+                    top: document.getElementById('timeline-nav').offsetTop - 50,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Update active dot based on scroll position
+            window.addEventListener('scroll', function() {
+                const scrollPosition = window.scrollY;
+                
+                // Get all phase sections
+                const phases = [
+                    document.getElementById('phase1'),
+                    document.getElementById('phase2'),
+                    document.getElementById('phase3'),
+                    document.getElementById('phase4'),
+                    document.getElementById('phase5')
+                ];
+                
+                // Find the section in view
+                let activeSection = null;
+                for (let i = phases.length - 1; i >= 0; i--) {
+                    const section = phases[i];
+                    if (section && scrollPosition >= section.offsetTop - 200) {
+                        activeSection = `phase${i+1}`;
+                        break;
+                    }
+                }
+                
+                // Update active dot
+                if (activeSection) {
+                    document.querySelectorAll('.timeline-dot').forEach(dot => {
+                        if (dot.getAttribute('data-target') === activeSection) {
+                            dot.classList.add('active');
+                        } else {
+                            dot.classList.remove('active');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
